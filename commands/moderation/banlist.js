@@ -5,11 +5,22 @@ const keyv = new Keyv("sqlite://database.db");
 
 let banList = [];
 
+let modRoles = [
+    "1237987632315633665", // Verifier
+    "1236458340708646942", // Mod
+    "1236458128476999690" // Super Mod
+];
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("banlist")
         .setDescription("Lists all users banned from uploading to speedrun.com"),
     async execute(interaction) {
+        if(!modRoles.some(role => interaction.member.roles.cache.has(role))) {
+            interaction.reply({ content: "You do not have the permissions to use this command.", ephemeral: true });
+            return;
+        }
+        
         if(await keyv.get("ban-list") == undefined) {
             banList = []
 

@@ -6,6 +6,12 @@ const keyv = new Keyv("sqlite://database.db");
 let bannedUsers = [];
 let banList = [];
 
+let modRoles = [
+    "1237987632315633665", // Verifier
+    "1236458340708646942", // Mod
+    "1236458128476999690" // Super Mod
+];
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("unban")
@@ -16,6 +22,11 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        if(!modRoles.some(role => interaction.member.roles.cache.has(role))) {
+            interaction.reply({ content: "You do not have the permissions to use this command.", ephemeral: true });
+            return;
+        }
+
         bannedUsers = await initializeVariable("banned-users");
         banList = await initializeVariable("ban-list");
 
