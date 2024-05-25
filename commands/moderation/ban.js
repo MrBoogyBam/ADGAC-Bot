@@ -1,12 +1,19 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { githubToken } = require("../../config.json");
+const path = require("node:path");
 
 const Keyv = require("keyv");
 const keyv = new Keyv("sqlite://database.db");
+
+const simpleGit = require("simple-git");
+const git = simpleGit();
+const dbPath = path.join(path.resolve(__dirname + "../../../"), "database.db");
 
 let bannedUsers = [];
 let banList = [];
 
 let modRoles = [
+    "1243707365304569866",
     "1237987632315633665", // Verifier
     "1236458340708646942", // Mod
     "1236458128476999690" // Super Mod
@@ -59,6 +66,10 @@ module.exports = {
 
             await keyv.set("banned-users", bannedUsers);
             await keyv.set("ban-list", banList);
+
+            await git.add(dbPath);
+            await git.commit("Updated database.db");
+            await git.push(`https://${githubToken}@github.com/MrBoogyBam/ADGAC-Bot.git`, "main");
 
             let banEmbed = new EmbedBuilder()
                 .setColor(0xff0000)
