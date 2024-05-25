@@ -13,7 +13,6 @@ let bannedUsers = [];
 let banList = [];
 
 let modRoles = [
-    "1243707365304569866",
     "1237987632315633665", // Verifier
     "1236458340708646942", // Mod
     "1236458128476999690" // Super Mod
